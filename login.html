@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/5.1.1/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/5.1.1/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="./lib/fontawesome-free-5.15.4-web/css/all.min.css">
+    <script src="./lib/jquery/js/jquery-3.6.3.min.js"></script>
+</head>
+
+<body>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            font-size: var(--body-font-size, 14px);
+            line-height: 1.5;
+
+        }
+
+        .account-form {
+            width: 340px;
+            margin: 0 auto;
+        }
+
+        .account-form-header h1 {
+            font-size: 24px;
+            font-weight: var(--base-text-weight-light, 300);
+            letter-spacing: -0.5px;
+        }
+
+        .account-form-body {
+            padding: 20px;
+            border: 1px solid #d8dee4;
+            border-radius: 6px;
+            background-color: #f6f8fa;
+
+            font-size: 14px;
+        }
+
+        .account-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 400;
+            text-align: left;
+        }
+
+        .input-block {
+            display: block;
+            width: 100%;
+            margin-top: 4px;
+            /* margin-bottom: 16px; */
+        }
+
+        .form-link {
+            color: #0969da;
+            text-decoration: none;
+        }
+
+        .form-link:hover {
+            color: #0a58ca;
+            text-decoration: underline;
+        }
+
+        .label-link {
+            font-size: 12px;
+        }
+    </style>
+
+    <div class="header-logo pt-5 pb-4 text-center">
+        <svg class="icon" style="width: 4em;height: 4em;vertical-align: middle;fill: currentColor;overflow: hidden;"
+            viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5564">
+            <path
+                d="M933.4 209.6c-17.2-17.3-40.2-26.8-64.5-26.8H155.2c-50.3 0-91.3 40.9-91.3 91.3v475.8c0 50.3 40.9 91.3 91.3 91.3h713.5c50.3 0 91.3-40.9 91.3-91.3V274.1c0.1-24.4-9.4-47.3-26.6-64.5zM530.5 571.5c-4.9 4.9-11.4 7.6-18.4 7.6s-13.5-2.7-18.4-7.6L168.6 246.4h686.8L530.5 571.5z m-186.3-59.6L127.6 728.5V295.3l216.6 216.6z m44.8 45l59.6 59.6c16.9 16.9 39.5 26.3 63.4 26.3s46.5-9.3 63.4-26.3l59.6-59.6 220.5 220.5H168.6L389 556.9z m291-45l216.6-216.6v433.2L680 511.9z"
+                fill="" p-id="5565"></path>
+        </svg>
+    </div>
+
+    <form id="sign-in-form" class="account-form">
+        <div class="account-form-header text-center mb-3 p-0">
+            <h1>Sign in to Yuba Technology</h1>
+        </div>
+
+        <div id="sign-in-result"></div>
+
+        <div class="account-form-body mt-3">
+            <div class="form-group position-relative mb-3">
+                <label for="login-username">
+                    Username
+                </label>
+                <a class="form-link label-link position-absolute top-0 end-0" id="forgot-password" tabindex="0"
+                    href="/password_reset">Forgot username?</a>
+                <input type="text" id="login-username" class="form-control input-block" autocapitalize="none"
+                    autocorrect="off" autocomplete="username" autofocus="autofocus">
+            </div>
+
+            <div class="form-group position-relative mb-3">
+                <label for="login-password">
+                    Password
+                </label>
+                <a class="form-link label-link position-absolute top-0 end-0" id="forgot-password" tabindex="0"
+                    href="/password_reset">Forgot password?</a>
+                <input type="text" id="login-password" class="form-control input-block" autocapitalize="none"
+                    autocorrect="off" autocomplete="username" autofocus="autofocus">
+            </div>
+
+            <input type="submit" value="Sign in" id="login-submit" class="btn btn-success w-100">
+        </div>
+
+        <p class="account-form-body bg-white text-center mt-3">
+            New to Here?
+            <a class="form-link" href="./register.html">Create an account</a>.
+        </p>
+    </form>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script type="module">
+        import { Octokit } from "https://esm.sh/@octokit/core@4.2.4";
+        const token = "Z2l0aHViX3BhdF8xMUFMM0xYTlEwQ3NHbW5FYVdtQWhWX3VhaEVwVTFQN1QxeGJJVzFtRzJTQUEzaUhTM2E5dW13WE9yNjJPUXlKSWZWWFROTURVRWRzdzRDVmMx"
+
+        const octokit = new Octokit({ auth: window.atob(token) });
+
+        function showError(message) {
+            $("#sign-in-result").html(`<div class="alert alert-danger alert-dismissible" role="alert">${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`);
+            $("#sign-in-result").find(".btn-close").focus();
+        }
+
+        function showSuccess(message) {
+            $("#sign-in-result").html(`<div class="alert alert-success alert-dismissible" role="alert">${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`);
+            $("#sign-in-result").find(".btn-close").focus();
+        }
+
+        async function verifySignature(data, key, signature) {
+            // 计算密钥的 SHA256 哈希值，然后转换成16进制字符串，最后转换为字节数组
+            // key的类型是字符串
+            if (!data || !key || !signature) {
+                return false;
+            }
+
+            async function sha256(data) {
+                const encoder = new TextEncoder();
+                const dataBuffer = encoder.encode(data);
+
+                const hashBuffer = await crypto.subtle.digest("SHA-256", dataBuffer);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray
+                    .map((byte) => byte.toString(16).padStart(2, "0"))
+                    .join("");
+                return hashHex;
+            }
+
+            key = await sha256(key);
+
+            // 将密钥转换为字节数组
+            const keyBytes = new TextEncoder().encode(key);
+
+            // 将签名结果转换为字节数组
+            const signatureBytes = Uint8Array.from(signature.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+
+            // 使用 HMAC-SHA256 算法验证签名
+            return crypto.subtle.importKey("raw", keyBytes, { name: "HMAC", hash: "SHA-256" }, false, ["verify"])
+                .then(key => crypto.subtle.verify("HMAC", key, signatureBytes, new TextEncoder().encode(data)))
+                .then(result => {
+                    return result;
+                })
+                .catch(error => {
+                    console.error(error);
+                    return false;
+                });
+        }
+
+        $("#sign-in-form").on("submit", async function (e) {
+            e.preventDefault();
+            // 尝试请求yubac.github.io/gs/data/users/{username}/profile.json
+            // 如果请求成功，显示用户信息
+            // 如果请求失败，显示用户不存在
+            const $username = $("#login-username")
+            const username = $username.val();
+            const $password = $("#login-password");
+            const password = $password.val();
+            const $loginSubmit = $("#login-submit");
+
+            $loginSubmit.val("Singing in...").attr("disabled", "true");
+
+            await fetch(`https://yubac.github.io/gs/users/${username}/profile.json`)
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        // 用户不存在
+                        $username.val("");
+                        $password.val("");
+                        throw new Error("Invalid username.");
+                    }
+                })
+                .then(async data => {
+                    if (await verifySignature(data.id, password, data.signature)) {
+                        showSuccess(`Hi ${username}!`);
+                    } else {
+                        $password.val("");
+                        throw new Error("Invalid password.");
+                    }
+                })
+                .catch(error => {
+                    // display error message
+                    // $("#sign-in-form")[0].reset();
+                    console.error(error.message);
+                    showError(error.message)
+                });
+
+            $loginSubmit.val("Sing in").removeAttr("disabled");
+        });
+    </script>
+</body>
+
+</html>

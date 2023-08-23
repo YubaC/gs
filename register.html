@@ -13,40 +13,281 @@
 </head>
 
 <body>
-    <form id="register" class="m-3">
-        <div class="mt-3 mb-3">
-            <label for="register-user-username" class="form-label">Username:</label>
-            <input type="text" class="form-control" id="register-user-username" placeholder="Enter username">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            font-size: var(--body-font-size, 14px);
+            line-height: 1.5;
+        }
+
+        .account-form {
+            width: 340px;
+            margin: 0 auto;
+        }
+
+        .account-form-header h1 {
+            font-size: 24px;
+            font-weight: var(--base-text-weight-light, 300);
+            letter-spacing: -0.5px;
+        }
+
+        .account-form-body {
+            padding: 20px;
+            border: 1px solid #d8dee4;
+            border-radius: 6px;
+            background-color: #f6f8fa;
+
+            font-size: 14px;
+        }
+
+        .account-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 400;
+            text-align: left;
+        }
+
+        .input-block {
+            display: block;
+            width: 100%;
+            margin-top: 4px;
+            /* margin-bottom: 16px; */
+        }
+
+        .form-link {
+            color: #0969da;
+            text-decoration: none;
+        }
+
+        .form-link:hover {
+            color: #0a58ca;
+            text-decoration: underline;
+        }
+
+        .label-link {
+            font-size: 12px;
+        }
+
+        #register-form label::after {
+            content: "*";
+            color: rgb(187, 0, 0);
+        }
+
+        #header-logo {
+            aspect-ratio: 1/1;
+            width: 9em;
+            padding: 25px;
+            box-shadow: 0 8px 6px -6px rgba(0, 0, 0, 0.5);
+            overflow: visible;
+        }
+    </style>
+
+    <div class="header-logo w-100 pt-5 pb-4 text-center">
+        <svg id="header-logo" class="icon" style="vertical-align: middle;overflow: hidden;" viewBox="0 0 1024 1024"
+            version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3273">
+            <defs>
+                <path id="header-logo-send"
+                    d="M1007.4 16.5c-7.2-7.2-18-9.4-27.3-5.4L24.1 423.7c-8.9 3.8-14.8 12.3-15 22-0.3 9.7 5.1 18.3 13.7 22.6l354.6 177.4 180.9 358.9c4.2 8.4 12.8 9.4 22.1 9.4 0.3 0 0.5 0 0.8 0 9.6 0 18.2-1.9 22-10.8l409.5-959.3C1016.7 34.5 1014.6 23.7 1007.4 16.5zM92.8 448.7 913.2 94.5 401.3 603.9 92.8 448.7zM578.5 938.6l-159-317.6L929 114 578.5 938.6z"
+                    fill="#231815" p-id="3274"></path>
+                <path id="header-logo-mail"
+                    d="M933.4 209.6c-17.2-17.3-40.2-26.8-64.5-26.8H155.2c-50.3 0-91.3 40.9-91.3 91.3v475.8c0 50.3 40.9 91.3 91.3 91.3h713.5c50.3 0 91.3-40.9 91.3-91.3V274.1c0.1-24.4-9.4-47.3-26.6-64.5zM530.5 571.5c-4.9 4.9-11.4 7.6-18.4 7.6s-13.5-2.7-18.4-7.6L168.6 246.4h686.8L530.5 571.5z m-186.3-59.6L127.6 728.5V295.3l216.6 216.6z m44.8 45l59.6 59.6c16.9 16.9 39.5 26.3 63.4 26.3s46.5-9.3 63.4-26.3l59.6-59.6 220.5 220.5H168.6L389 556.9z m291-45l216.6-216.6v433.2L680 511.9z"
+                    fill="" p-id="5565"></path>
+            </defs>
+            <path id="header-logo-display" stroke="black" stroke-width="10" fill="transparent"
+                d="M933.4 209.6c-17.2-17.3-40.2-26.8-64.5-26.8H155.2c-50.3 0-91.3 40.9-91.3 91.3v475.8c0 50.3 40.9 91.3 91.3 91.3h713.5c50.3 0 91.3-40.9 91.3-91.3V274.1c0.1-24.4-9.4-47.3-26.6-64.5zM530.5 571.5c-4.9 4.9-11.4 7.6-18.4 7.6s-13.5-2.7-18.4-7.6L168.6 246.4h686.8L530.5 571.5z m-186.3-59.6L127.6 728.5V295.3l216.6 216.6z m44.8 45l59.6 59.6c16.9 16.9 39.5 26.3 63.4 26.3s46.5-9.3 63.4-26.3l59.6-59.6 220.5 220.5H168.6L389 556.9z m291-45l216.6-216.6v433.2L680 511.9z">
+            </path>
+        </svg>
+    </div>
+
+    <div id="register-send-a-mail" class="account-form account-form-body text-center">
+        <p class="m-md-5 fw-bold h6">To create a new account, <br>
+            please send an email to <br>
+            <a href="mailto:JNSGMS-28-10-AOS@outlook.com?subject=Register">JNSGMS-28-10-AOS@outlook.com</a><br>
+            with the subject "Register"<br>
+            in the email's subject line.
+        </p>
+
+        <button id="sent" class="btn btn-primary mt-4">
+            I have sent the email
+        </button>
+    </div>
+
+    <form id="register-form" class="account-form needs-validation" style="display:none" novalidate>
+        <div class="account-form-header text-center mb-3 p-0">
+            <h1>Register a new account</h1>
         </div>
-        <div class="mt-3 mb-3">
-            <label for="register-user-password" class="form-label">Password:</label>
-            <input type="text" class="form-control" id="register-user-password" placeholder="Enter password">
+
+        <div class="account-form-body mt-3">
+            <div class="form-group mb-3">
+                <label for="register-username">
+                    Username
+                </label>
+                <input type="text" id="register-username" class="form-control input-block" autocapitalize="none"
+                    autocorrect="off" autocomplete="username" autofocus required pattern="^[a-zA-Z0-9_]{4,16}$">
+                <div class="invalid-feedback">
+                    Please enter a username that is between 4 and 16 characters long, and only contains letters,
+                    numbers, and underscores ( _ ).
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="register-password">
+                    Password
+                </label>
+                <input type="password" id="register-password" class="form-control input-block" autocapitalize="none"
+                    autocorrect="off" autocomplete="new-password" autofocus required
+                    pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d_]{8,16}$">
+                <div class="invalid-feedback">
+                    Please enter a password that is between 8 and 16 characters long, and only contains letters,
+                    numbers, and underscores ( _ ). Your password must include at least one letter and one number.
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="register-repeat-password">
+                    Repeat password
+                </label>
+                <input type="password" id="register-repeat-password" class="form-control input-block"
+                    autocapitalize="none" autocorrect="off" autocomplete="new-password" autofocus required
+                    pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d_]{8,16}$"
+                    oninput="this.setCustomValidity($(this).val() === $('#register-password').val()?'':'Passwords do not match')">
+
+                <div class="invalid-feedback">
+                    Please enter the same password as above.
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="register-email">
+                    Email
+                </label>
+                <input type="email" id="register-email" class="form-control input-block" autocapitalize="none" required
+                    pattern="^[a-zA-Z0-9_]+@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)+$">
+                <div class="invalid-feedback">
+                    Please enter the same email address as the one you used to send the "register" email.
+                </div>
+            </div>
+            <input type="submit" value="Register" id="submit-btn" class="btn btn-success w-100">
         </div>
-        <div class="mt-3 mb-3">
-            <label for="register-user-email" class="form-label">Email:</label>
-            <input type="email" class="form-control" id="register-user-email" placeholder="Enter email">
-        </div>
-        <button type="submit" class="btn btn-primary">注册用户</button>
     </form>
 
-    <form id="get-user" class="m-3">
-        <div class="mt-3 mb-3">
-            <label for="get-user-username" class="form-label">Username:</label>
-            <input type="text" class="form-control" id="get-user-username" placeholder="Enter username">
-        </div>
-        <button type="submit" class="btn btn-primary">查找用户</button>
-    </form>
+    <p class="account-form account-form-body bg-white text-center mt-3 mb-5">
+        Already have an account?
+        <a class="form-link" href="./login.html">Sign in</a>.
+    </p>
 
-    <div id="result"></div>
+    <script src="https://unpkg.com/pasition@1.0.1/dist/pasition.js"></script>
+    <script>
+        /**
+         * 一个对pasition的扩展,pasition执行过程中产生的实时返回数据(即shapes)格式对于生成canvas画布数据比较方便,但对于生成svg需要额外的处理一下,这里扩展的这个方法是将实时数据生成适合svg路径的字符串格式
+         * @param {Object} shapes  pasition执行过程中产生的实时返回数据
+         * @return {String} SVGString svg路径格式字符串
+         * */
+        pasition.toSVGString = function (shapes) {
+            /*克隆一下实时数据*/
+            //var shapes = JSON.parse(JSON.stringify(shapes||[]));
+            /*对数据中的每个点数组做处理
+            * */
+            return shapes.map(function (shape) {
+                shape.forEach(function (point, idx) {
+                    if (!idx) {
+                        /*
+                         * 若是第一个点数组，那么对该点数组的处理是前面加M,然后前两个点后面加C
+                         * */
+                        point.splice(2, 0, "C");
+                        point.unshift("M");
+                    } else {
+                        /*
+                         * 除了第一个点数据外,所有的点数组的前两个点删除掉
+                         * */
+                        point.splice(0, 2, "C");
+                    }
+                });
+                return shape.map(function (point) {
+                    return point.join(" ");
+                }).join("");
+            }).join("")
+        };
+
+        var dom = document.querySelector("#header-logo-display");
+        var pathA = document.querySelector('#header-logo-mail').getAttribute('d'),
+            pathB = document.querySelector('#header-logo-send').getAttribute('d');
+        function animate(arr, indexA, indexB) {
+            pasition.animate({
+                from: arr[indexA],
+                to: arr[indexB],
+                time: 800,
+                progress: function (shapes) {
+                    dom.setAttribute("d", pasition.toSVGString(shapes));
+                },
+                end: function () {
+                    setTimeout(function () {
+                        indexA++
+                        indexB++
+                        if (indexA === arr.length) indexA = 0
+                        if (indexB === arr.length) indexB = 0
+                        animate(arr, indexA, indexB)
+                    }, 8000)
+
+                }
+            })
+        }
+        setTimeout(() => {
+            animate([pathA, pathB], 0, 1);
+        }, 8000);
+    </script>
 
     <script type="module">
         import { Octokit } from "https://esm.sh/@octokit/core@4.2.4";
         const token = "Z2l0aHViX3BhdF8xMUFMM0xYTlEwQ3NHbW5FYVdtQWhWX3VhaEVwVTFQN1QxeGJJVzFtRzJTQUEzaUhTM2E5dW13WE9yNjJPUXlKSWZWWFROTURVRWRzdzRDVmMx"
-
         const octokit = new Octokit({ auth: window.atob(token) });
 
-        $("#register").on("submit", async function (e) {
+        const $submitBtn = $("#submit-btn");
+
+        async function checkIfUsernameAlreadyExists(name) {
+            const ok = await fetch(`https://yubac.github.io/gs/users/${name}/profile.json`)
+                .then(response => {
+                    if (response.ok) {
+                        console.log("This username is already taken. Please try another one.");
+                        return true;
+                    } else {
+                        console.log("This username is available.");
+                        return false;
+                    }
+                })
+            return ok;
+        }
+
+        $("#sent").on("click", function (e) {
+            $("#register-send-a-mail").hide(1200);
+            $("#register-form").show(1500);
+        });
+
+        const $registerForm = $("#register-form");
+        $registerForm.on("submit", async function (e) {
+            e.stopPropagation();
             e.preventDefault();
+            // 检查表单是否通过验证
+            if ($registerForm[0].checkValidity() === false) {
+                $registerForm[0].classList.add('was-validated');
+                return;
+            }
+
+            // 检查用户名是否已经被注册
+            const username = $('#register-username').val();
+            const usernameAlreadyExists = await checkIfUsernameAlreadyExists(username);
+            if (usernameAlreadyExists) {
+                // 将#register-username标记为无效
+                window.alert("This username is already taken. Please try another one.");
+                return;
+            }
+
+            console.log("register");
+
+            $submitBtn
+                .attr("disabled", true)
+                .val("Registering...");
+
             await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
                 owner: 'YubaC',
                 // repo: 'Github-Actions-Test',
@@ -55,38 +296,18 @@
                 workflow_id: 'register.yml',
                 ref: 'main',
                 inputs: {
-                    name: $('#register-user-username').val(),
-                    password: $('#register-user-password').val(),
-                    email: $('#register-user-email').val()
+                    name: $('#register-username').val(),
+                    password: $('#register-password').val(),
+                    email: $('#register-email').val()
                 }
             });
-        });
 
-        $("#get-user").on("submit", function (e) {
-            e.preventDefault();
-            // 尝试请求yubac.github.io/gs/data/users/{username}/profile.json
-            // 如果请求成功，显示用户信息
-            // 如果请求失败，显示用户不存在
-            const username = $("#get-user-username").val();
+            $submitBtn
+                .attr("disabled", false)
+                .val("Register");
 
-            fetch(`https://yubac.github.io/gs/data/users/${username}/profile.json`)
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        throw new Error('User not found');
-                    }
-                })
-                .then(data => {
-                    // display user information
-                    console.log(data);
-                    $("#result").text(JSON.stringify(data));
-                })
-                .catch(error => {
-                    // display error message
-                    console.error(error.message);
-                    $("#result").text(error.message);
-                });
+            window.alert("Thank you for submitting your request. Our server is currently processing it, which may take some time. You will receive an email from us shortly, regardless of whether the registration is successful or not, to update you on the status of your request.");
+            window.location.href = "./login.html";
         });
     </script>
 </body>
