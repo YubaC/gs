@@ -74,42 +74,43 @@
         </svg>
     </div>
 
-    <form id="sign-in-form" class="account-form">
+    <div class="account-form">
         <div class="account-form-header text-center mb-3 p-0">
             <h1>Sign in to Yuba Technology</h1>
         </div>
 
         <div id="sign-in-result"></div>
+        <form id="sign-in-form">
+            <div class="account-form-body mt-3">
+                <div class="form-group position-relative mb-3">
+                    <label for="login-username">
+                        Username
+                    </label>
+                    <a class="form-link label-link position-absolute top-0 end-0" id="forgot-password" tabindex="0"
+                        href="/password_reset">Forgot username?</a>
+                    <input type="text" id="login-username" class="form-control input-block" autocapitalize="none"
+                        autocorrect="off" autocomplete="username" autofocus="autofocus">
+                </div>
 
-        <div class="account-form-body mt-3">
-            <div class="form-group position-relative mb-3">
-                <label for="login-username">
-                    Username
-                </label>
-                <a class="form-link label-link position-absolute top-0 end-0" id="forgot-password" tabindex="0"
-                    href="/password_reset">Forgot username?</a>
-                <input type="text" id="login-username" class="form-control input-block" autocapitalize="none"
-                    autocorrect="off" autocomplete="username" autofocus="autofocus">
+                <div class="form-group position-relative mb-3">
+                    <label for="login-password">
+                        Password
+                    </label>
+                    <a class="form-link label-link position-absolute top-0 end-0" id="forgot-password" tabindex="0"
+                        href="/password_reset">Forgot password?</a>
+                    <input type="password" id="login-password" class="form-control input-block" autocapitalize="none"
+                        autocorrect="off" autocomplete="username" autofocus="autofocus">
+                </div>
+
+                <input type="submit" value="Sign in" id="login-submit" class="btn btn-success w-100">
             </div>
-
-            <div class="form-group position-relative mb-3">
-                <label for="login-password">
-                    Password
-                </label>
-                <a class="form-link label-link position-absolute top-0 end-0" id="forgot-password" tabindex="0"
-                    href="/password_reset">Forgot password?</a>
-                <input type="password" id="login-password" class="form-control input-block" autocapitalize="none"
-                    autocorrect="off" autocomplete="username" autofocus="autofocus">
-            </div>
-
-            <input type="submit" value="Sign in" id="login-submit" class="btn btn-success w-100">
-        </div>
+        </form>
 
         <p class="account-form-body bg-white text-center mt-3">
             New to Here?
             <a class="form-link" href="./register.html">Create an account</a>.
         </p>
-    </form>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script type="module">
