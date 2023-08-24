@@ -84,10 +84,8 @@
             <div class="account-form-body mt-3">
                 <div class="form-group position-relative mb-3">
                     <label for="login-username">
-                        Username
+                        Username or email address
                     </label>
-                    <a class="form-link label-link position-absolute top-0 end-0" id="forgot-password" tabindex="0"
-                        href="/password_reset">Forgot username?</a>
                     <input type="text" id="login-username" class="form-control input-block" autocapitalize="none"
                         autocorrect="off" autocomplete="username" autofocus="autofocus">
                 </div>
@@ -129,23 +127,23 @@
             $("#sign-in-result").find(".btn-close").focus();
         }
 
+        async function sha256(data) {
+            const encoder = new TextEncoder();
+            const dataBuffer = encoder.encode(data);
+
+            const hashBuffer = await crypto.subtle.digest("SHA-256", dataBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray
+                .map((byte) => byte.toString(16).padStart(2, "0"))
+                .join("");
+            return hashHex;
+        }
+
         async function verifySignature(data, key, signature) {
             // 计算密钥的 SHA256 哈希值，然后转换成16进制字符串，最后转换为字节数组
             // key的类型是字符串
             if (!data || !key || !signature) {
                 return false;
-            }
-
-            async function sha256(data) {
-                const encoder = new TextEncoder();
-                const dataBuffer = encoder.encode(data);
-
-                const hashBuffer = await crypto.subtle.digest("SHA-256", dataBuffer);
-                const hashArray = Array.from(new Uint8Array(hashBuffer));
-                const hashHex = hashArray
-                    .map((byte) => byte.toString(16).padStart(2, "0"))
-                    .join("");
-                return hashHex;
             }
 
             key = await sha256(key);
@@ -168,45 +166,75 @@
                 });
         }
 
+        async function getFileFromGithub(url) {
+            return await ("https://api.github.com/repos/YubaC/FG-Ranking-List/contents/" + fileName, {
+                method: "get",
+            }).then((res) => {
+                // console.log(res);
+                return res.json();
+            }).then((data) => {
+                return (JSON.parse(b64DecodeUnicode(data.content)));
+            });
+        }
+
         $("#sign-in-form").on("submit", async function (e) {
             e.preventDefault();
             // 尝试请求yubac.github.io/gs/data/users/{username}/profile.json
             // 如果请求成功，显示用户信息
             // 如果请求失败，显示用户不存在
             const $username = $("#login-username")
-            const username = $username.val();
+            const usernameInputed = $username.val();
             const $password = $("#login-password");
             const password = $password.val();
             const $loginSubmit = $("#login-submit");
 
             $loginSubmit.val("Singing in...").attr("disabled", "true");
 
-            await fetch(`https://yubac.github.io/gs/users/${username}/profile.json`)
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        // 用户不存在
+            const getUserName = async (userInput) => {
+                if (!/^[a-zA-Z0-9_]+@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)+$/.test(userInput)) {
+                    return userInput;
+                }
+
+                const fetchURL = `https://yubac.github.io/gs/users/email_${await sha256(userInput)}`;
+                const response = await fetch(fetchURL);
+                if (!response.ok) {
+                    throw new Error("Invalid username or email address.");
+                }
+
+                return await response.text();
+            }
+
+            const fetchProfile = async (username) => {
+                const fetchURL = `https://yubac.github.io/gs/users/${username}/profile.json`;
+
+                const response = await fetch(fetchURL);
+                if (!response.ok) {
+                    throw new Error("Invalid username or email address.");
+                }
+
+                return response.json();
+            };
+
+            try {
+                const username = await getUserName(usernameInputed);
+                const data = await fetchProfile(username);
+                if (await verifySignature(data.id, password, data.signature)) {
+                    showSuccess(`Hi ${username}!`);
+                } else {
+                    throw new Error("Invalid password.");
+                }
+            } catch (error) {
+                switch (error.message) {
+                    case "Invalid username or email address.":
                         $username.val("");
                         $password.val("");
-                        throw new Error("Invalid username.");
-                    }
-                })
-                .then(async data => {
-                    if (await verifySignature(data.id, password, data.signature)) {
-                        showSuccess(`Hi ${username}!`);
-                    } else {
+                        break;
+                    case "Invalid password.":
                         $password.val("");
-                        throw new Error("Invalid password.");
-                    }
-                })
-                .catch(error => {
-                    // display error message
-                    // $("#sign-in-form")[0].reset();
-                    console.error(error.message);
-                    showError(error.message)
-                });
-
+                        break;
+                }
+                showError(error.message);
+            }
             $loginSubmit.val("Sing in").removeAttr("disabled");
         });
     </script>
