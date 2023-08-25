@@ -94,10 +94,10 @@
                     <label for="login-password">
                         Password
                     </label>
-                    <a class="form-link label-link position-absolute top-0 end-0" id="forgot-password" tabindex="0"
-                        href="/password_reset">Forgot password?</a>
                     <input type="password" id="login-password" class="form-control input-block" autocapitalize="none"
                         autocorrect="off" autocomplete="username" autofocus="autofocus">
+                    <a class="form-link label-link position-absolute top-0 end-0" id="forgot-password" tabindex="0"
+                        href="/password_reset">Forgot password?</a>
                 </div>
 
                 <input type="submit" value="Sign in" id="login-submit" class="btn btn-success w-100">
@@ -166,15 +166,57 @@
                 });
         }
 
-        async function getFileFromGithub(url) {
-            return await ("https://api.github.com/repos/YubaC/FG-Ranking-List/contents/" + fileName, {
+        // base64解密的函数
+        function b64DecodeUnicode(str) {
+            return decodeURIComponent(atob(str).split('').map(function (c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+        }
+
+        // async function getFileFromGithub(fileName) {
+        //     return await fetch("https://api.github.com/repos/YubaC/gs/contents/" + fileName, {
+        //         method: "get",
+        //     }).then((res) => {
+        //         if (!res.ok) {
+        //             throw new Error("Network response was not ok. " + res.status + " " + res.statusText);
+        //         }
+        //         return res.json();
+        //     }).then((data) => {
+        //         return {
+        //             ok: true,
+        //             data: b64DecodeUnicode(data.content),
+        //         }
+        //     }).catch((error) => {
+        //         return {
+        //             ok: false,
+        //             error: error,
+        //         }
+        //     });
+        // }
+
+        async function getFileFromGithub(fileName) {
+            // If cannot send a response, it will auto throw an error.
+            // Usually this is because of network error.
+            const response = await fetch("https://api.github.com/repos/YubaC/gs/contents/" + fileName, {
                 method: "get",
-            }).then((res) => {
-                // console.log(res);
-                return res.json();
-            }).then((data) => {
-                return (JSON.parse(b64DecodeUnicode(data.content)));
             });
+            // The response is already created, so we can use it.
+            // The network is ok then.
+            try {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok. " + response.status + " " + response.statusText);
+                }
+                const data = await response.json();
+                return {
+                    ok: true,
+                    data: b64DecodeUnicode(data.content),
+                };
+            } catch (error) {
+                return {
+                    ok: false,
+                    error: error,
+                };
+            }
         }
 
         $("#sign-in-form").on("submit", async function (e) {
@@ -195,24 +237,33 @@
                     return userInput;
                 }
 
-                const fetchURL = `https://yubac.github.io/gs/users/email_${await sha256(userInput)}`;
-                const response = await fetch(fetchURL);
+                // const fetchURL = `https://yubac.github.io/gs/users/email_${await sha256(userInput)}`;
+                // const response = await fetch(fetchURL);
+                const response = await getFileFromGithub(`users/email_${await sha256(userInput)}`);
                 if (!response.ok) {
+                    console.error(response.status);
                     throw new Error("Invalid username or email address.");
                 }
-
-                return await response.text();
+                return await response.data;
             }
 
             const fetchProfile = async (username) => {
-                const fetchURL = `https://yubac.github.io/gs/users/${username}/profile.json`;
-
-                const response = await fetch(fetchURL);
+                // const fetchURL = `https://yubac.github.io/gs/users/${username}/profile.json`;
+                // const response = await fetch(fetchURL);
+                const response = await getFileFromGithub(`users/${username}/profile.json`);
                 if (!response.ok) {
-                    throw new Error("Invalid username or email address.");
+                    console.error(response.error);
+                    // 如果是网络错误，抛出错误
+                    // 否则抛出用户不存在的错误
+                    if (response.error) {
+                        console.error(response.error);
+                        // throw response.error;
+                    } else {
+                        throw new Error("Invalid username or email address.");
+                    }
                 }
 
-                return response.json();
+                return JSON.parse(response.data);
             };
 
             try {
