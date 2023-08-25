@@ -87,7 +87,7 @@
                         Username or email address
                     </label>
                     <input type="text" id="login-username" class="form-control input-block" autocapitalize="none"
-                        autocorrect="off" autocomplete="username" autofocus="autofocus">
+                        autocorrect="off" autocomplete="username" autofocus="autofocus" required>
                 </div>
 
                 <div class="form-group position-relative mb-3">
@@ -95,7 +95,7 @@
                         Password
                     </label>
                     <input type="password" id="login-password" class="form-control input-block" autocapitalize="none"
-                        autocorrect="off" autocomplete="username" autofocus="autofocus">
+                        autocorrect="off" autocomplete="username" autofocus="autofocus" required>
                     <a class="form-link label-link position-absolute top-0 end-0" id="forgot-password" tabindex="0"
                         href="/password_reset">Forgot password?</a>
                 </div>
@@ -226,17 +226,12 @@
             const fetchProfile = async (username) => {
                 const response = await getFileFromGithub(`users/${username}/profile.json`);
                 if (!response.ok) {
-                    console.error(response.error);
                     // 如果是网络错误，则没有必要抛出错误，因为上面的getFileFromGithub已经抛出了错误
                     // 否则抛出用户不存在的错误
-                    if (response.error) {
-                        console.error(response.error);
-                        // throw response.error;
-                    } else {
-                        throw new Error("Invalid username or email address.");
-                    }
+                    console.error(response.error);
+                    // throw response.error;
+                    throw new Error("Invalid username or email address.");
                 }
-
                 return JSON.parse(response.data);
             };
 
