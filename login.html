@@ -173,27 +173,6 @@
             }).join(''));
         }
 
-        // async function getFileFromGithub(fileName) {
-        //     return await fetch("https://api.github.com/repos/YubaC/gs/contents/" + fileName, {
-        //         method: "get",
-        //     }).then((res) => {
-        //         if (!res.ok) {
-        //             throw new Error("Network response was not ok. " + res.status + " " + res.statusText);
-        //         }
-        //         return res.json();
-        //     }).then((data) => {
-        //         return {
-        //             ok: true,
-        //             data: b64DecodeUnicode(data.content),
-        //         }
-        //     }).catch((error) => {
-        //         return {
-        //             ok: false,
-        //             error: error,
-        //         }
-        //     });
-        // }
-
         async function getFileFromGithub(fileName) {
             // If cannot send a response, it will auto throw an error.
             // Usually this is because of network error.
@@ -236,9 +215,6 @@
                 if (!/^[a-zA-Z0-9_]+@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)+$/.test(userInput)) {
                     return userInput;
                 }
-
-                // const fetchURL = `https://yubac.github.io/gs/users/email_${await sha256(userInput)}`;
-                // const response = await fetch(fetchURL);
                 const response = await getFileFromGithub(`users/email_${await sha256(userInput)}`);
                 if (!response.ok) {
                     console.error(response.status);
@@ -248,12 +224,10 @@
             }
 
             const fetchProfile = async (username) => {
-                // const fetchURL = `https://yubac.github.io/gs/users/${username}/profile.json`;
-                // const response = await fetch(fetchURL);
                 const response = await getFileFromGithub(`users/${username}/profile.json`);
                 if (!response.ok) {
                     console.error(response.error);
-                    // 如果是网络错误，抛出错误
+                    // 如果是网络错误，则没有必要抛出错误，因为上面的getFileFromGithub已经抛出了错误
                     // 否则抛出用户不存在的错误
                     if (response.error) {
                         console.error(response.error);
