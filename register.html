@@ -237,10 +237,10 @@
         async function handleRegisterFormSubmit(e) {
             e.preventDefault();
             e.stopPropagation();
+            $registerForm[0].classList.add('was-validated');
             if (!validateUsernameInput()) {
                 return;
             }
-            $registerForm[0].classList.add('was-validated');
             if ($registerForm[0].checkValidity() === false) {
                 return;
             }
